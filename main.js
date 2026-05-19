@@ -235,6 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   shareBtn.addEventListener('click', shareResult);
+  document.getElementById('naejeonBtn').addEventListener('click', transformToNaejeonchilgi);
 
   function handleFile(file) {
     if (!file.type.startsWith('image/')) return;
@@ -413,6 +414,108 @@ function showResult() {
 
   // Store for sharing
   window._lastResult = type;
+}
+
+// ── Naejeonchilgi Transform ──
+async function transformToNaejeonchilgi() {
+  if (!uploadedImageData) return;
+
+  const btn = document.getElementById('naejeonBtn');
+  const loadingDiv = document.getElementById('naejeonLoading');
+  const resultDiv = document.getElementById('naejeonResult');
+  const resultImg = document.getElementById('naejeonImg');
+  const lang = getLang();
+
+  // Get or prompt for API key
+  let apiKey = localStorage.getItem('geminiApiKey');
+  if (!apiKey) {
+    apiKey = prompt(
+      lang === 'ko'
+        ? 'Google Gemini API 키를 입력하세요.\n(aistudio.google.com에서 무료 발급)'
+        : 'Enter your Google Gemini API key.\n(Get free at aistudio.google.com)'
+    );
+    if (!apiKey) return;
+    localStorage.setItem('geminiApiKey', apiKey.trim());
+    apiKey = apiKey.trim();
+  }
+
+  // Parse base64 from data URL
+  const comma = uploadedImageData.indexOf(',');
+  const mimeMatch = uploadedImageData.substring(0, comma).match(/data:([^;]+)/);
+  const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+  const base64Data = uploadedImageData.substring(comma + 1);
+
+  btn.disabled = true;
+  btn.textContent = lang === 'ko' ? '변환 중... ✨' : 'Transforming... ✨';
+  loadingDiv.style.display = '';
+  resultDiv.style.display = 'none';
+
+  const transformPrompt = `이미지를 한국의 나전칠기 작품과 동일하게 변형시켜줘
+
+A portrait made entirely of mother-of-pearl inlay on black lacquer (najeonchilgi),
+human face constructed from iridescent nacre shell fragments,
+mosaic-like composition with color-shifting abalone pieces,
+deep black lacquered background,
+shimmering rainbow highlights on shell surfaces,
+traditional Korean lacquerware art style,
+highly detailed, studio lighting`;
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { text: transformPrompt },
+              { inline_data: { mime_type: mimeType, data: base64Data } }
+            ]
+          }],
+          generationConfig: { response_modalities: ['IMAGE', 'TEXT'] }
+        })
+      }
+    );
+
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      throw new Error(errBody.error?.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    let imageDataUrl = null;
+    for (const part of (data.candidates?.[0]?.content?.parts || [])) {
+      if (part.inline_data?.data) {
+        imageDataUrl = `data:${part.inline_data.mime_type};base64,${part.inline_data.data}`;
+        break;
+      }
+    }
+    if (!imageDataUrl) throw new Error(lang === 'ko' ? '이미지 생성 실패' : 'No image returned');
+
+    resultImg.src = imageDataUrl;
+    resultDiv.style.display = '';
+
+    document.getElementById('naejeonDownloadBtn').onclick = () => {
+      const a = document.createElement('a');
+      a.href = imageDataUrl;
+      a.download = 'naejeonchilgi-portrait.png';
+      a.click();
+    };
+
+  } catch (err) {
+    const isAuthError = /API_KEY|401|403|invalid/.test(err.message);
+    if (isAuthError) localStorage.removeItem('geminiApiKey');
+    alert(
+      lang === 'ko'
+        ? `변환 실패: ${err.message}${isAuthError ? '\nAPI 키를 다시 확인해주세요.' : ''}`
+        : `Transform failed: ${err.message}${isAuthError ? '\nPlease check your API key.' : ''}`
+    );
+  } finally {
+    btn.disabled = false;
+    btn.textContent = lang === 'ko' ? '🎨 나전칠기로 변환하기' : '🎨 Transform to Naejeonchilgi';
+    loadingDiv.style.display = 'none';
+  }
 }
 
 // ── Before/After Flip Grid ──

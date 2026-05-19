@@ -1250,34 +1250,37 @@ html[lang="ko"] .lang-en { display: none; }
 ══════════════════════════════════════════ */
 
 .landing-section {
-  min-height: calc(100vh - 56px);
-  min-height: calc(100dvh - 56px);
+  height: 100vh;
+  height: 100dvh;
   padding-top: 56px;
+  box-sizing: border-box;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
   background: var(--lacquer);
+  overflow: hidden;
 }
 
 .landing-grid-wrap {
   position: relative;
-  width: 390px;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  flex: 1;
 }
 
-/* 3×3 grid — gold 2px gap becomes border */
+/* 3×3 grid — full viewport, gold 2px gap */
 .before-after-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 2px;
   background: rgba(200, 160, 82, 0.3);
   width: 100%;
+  height: 100%;
 }
 
-/* Square cells */
+/* Cells fill their grid area */
 .flip-cell {
-  aspect-ratio: 1 / 1;
   perspective: 900px;
 }
 
@@ -1364,12 +1367,12 @@ html[lang="ko"] .lang-en { display: none; }
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding: 0 22px 30px;
+  padding: 0 22px 36px;
   background: linear-gradient(to top,
-    rgba(7, 8, 12, 0.97) 0%,
-    rgba(7, 8, 12, 0.72) 28%,
-    rgba(7, 8, 12, 0.32) 52%,
-    transparent 72%);
+    rgba(7, 8, 12, 0.95) 0%,
+    rgba(7, 8, 12, 0.65) 22%,
+    rgba(7, 8, 12, 0.15) 45%,
+    transparent 62%);
   text-align: center;
   pointer-events: none;
 }
@@ -1405,11 +1408,11 @@ html[lang="ko"] .lang-en { display: none; }
 .ba-before::after { content: none; }
 .ba-after::before { content: none; }
 
-/* Cover + face-top positioning for all cells */
+/* Cover + face-centered positioning for all cells */
 .flip-front,
 .flip-back {
   background-size: cover;
-  background-position: center top;
+  background-position: center 15%;
 }
 
 .flip-cell:nth-child(1) .flip-front { background-image: url('images/1-1.png'); }
@@ -1438,3 +1441,99 @@ html[lang="ko"] .lang-en { display: none; }
 
 .flip-cell:nth-child(9) .flip-front { background-image: url('images/9-1.png'); }
 .flip-cell:nth-child(9) .flip-back  { background-image: url('images/9-2.jpg'); }
+
+/* ══════════════════════════════════════════
+   Naejeonchilgi Transform Section
+══════════════════════════════════════════ */
+
+.naejeon-section {
+  margin-top: 28px;
+  text-align: center;
+  padding-bottom: 12px;
+}
+
+.naejeon-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  color: rgba(200, 160, 82, 0.6);
+  font-size: 1rem;
+}
+
+.naejeon-divider::before,
+.naejeon-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(200, 160, 82, 0.35), transparent);
+}
+
+.naejeon-intro {
+  font-size: 0.84rem;
+  color: rgba(240, 232, 216, 0.6);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.btn-naejeon {
+  display: inline-block;
+  background: linear-gradient(135deg, #07080d 0%, #10151f 100%);
+  border: 1.5px solid rgba(136, 200, 216, 0.45);
+  color: rgba(180, 220, 230, 0.9);
+  padding: 13px 30px;
+  font-size: 0.96rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+  font-family: inherit;
+  letter-spacing: 0.03em;
+}
+
+.btn-naejeon:hover:not(:disabled) {
+  border-color: rgba(200, 160, 82, 0.65);
+  color: var(--gold-light);
+  box-shadow: 0 0 20px rgba(136, 200, 216, 0.18), 0 0 6px rgba(200, 160, 82, 0.12);
+}
+
+.btn-naejeon:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.naejeon-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 24px 0;
+  color: rgba(180, 220, 230, 0.75);
+  font-size: 0.88rem;
+}
+
+.naejeon-spinner {
+  width: 38px;
+  height: 38px;
+  border: 3px solid rgba(136, 200, 216, 0.18);
+  border-top-color: rgba(136, 200, 216, 0.85);
+  border-radius: 50%;
+  animation: naejeonSpin 0.85s linear infinite;
+}
+
+@keyframes naejeonSpin {
+  to { transform: rotate(360deg); }
+}
+
+.naejeon-img {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  margin: 20px auto 14px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(200, 160, 82, 0.35);
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.55), 0 0 16px rgba(136, 200, 216, 0.1);
+}
+
+.naejeon-download-btn {
+  margin-top: 4px;
+}

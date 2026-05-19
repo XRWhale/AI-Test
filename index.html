@@ -149,15 +149,15 @@
   <section class="landing-section" id="home">
     <div class="landing-grid-wrap">
       <div class="before-after-grid" id="beforeAfterGrid">
-        <div class="flip-cell"><div class="flip-inner"><div class="flip-front ba-v1 ba-before"></div><div class="flip-back ba-a1 ba-after"></div></div></div>
-        <div class="flip-cell"><div class="flip-inner"><div class="flip-front ba-v2 ba-before"></div><div class="flip-back ba-a2 ba-after"></div></div></div>
-        <div class="flip-cell"><div class="flip-inner"><div class="flip-front ba-v3 ba-before"></div><div class="flip-back ba-a3 ba-after"></div></div></div>
-        <div class="flip-cell"><div class="flip-inner"><div class="flip-front ba-v2 ba-before"></div><div class="flip-back ba-a1 ba-after"></div></div></div>
-        <div class="flip-cell"><div class="flip-inner"><div class="flip-front ba-v1 ba-before"></div><div class="flip-back ba-a2 ba-after"></div></div></div>
-        <div class="flip-cell"><div class="flip-inner"><div class="flip-front ba-v3 ba-before"></div><div class="flip-back ba-a3 ba-after"></div></div></div>
-        <div class="flip-cell"><div class="flip-inner"><div class="flip-front ba-v3 ba-before"></div><div class="flip-back ba-a2 ba-after"></div></div></div>
-        <div class="flip-cell"><div class="flip-inner"><div class="flip-front ba-v1 ba-before"></div><div class="flip-back ba-a1 ba-after"></div></div></div>
-        <div class="flip-cell"><div class="flip-inner"><div class="flip-front ba-v2 ba-before"></div><div class="flip-back ba-a3 ba-after"></div></div></div>
+        <div class="flip-cell"><div class="flip-inner"><div class="flip-front"></div><div class="flip-back"></div></div></div>
+        <div class="flip-cell"><div class="flip-inner"><div class="flip-front"></div><div class="flip-back"></div></div></div>
+        <div class="flip-cell"><div class="flip-inner"><div class="flip-front"></div><div class="flip-back"></div></div></div>
+        <div class="flip-cell"><div class="flip-inner"><div class="flip-front"></div><div class="flip-back"></div></div></div>
+        <div class="flip-cell"><div class="flip-inner"><div class="flip-front"></div><div class="flip-back"></div></div></div>
+        <div class="flip-cell"><div class="flip-inner"><div class="flip-front"></div><div class="flip-back"></div></div></div>
+        <div class="flip-cell"><div class="flip-inner"><div class="flip-front"></div><div class="flip-back"></div></div></div>
+        <div class="flip-cell"><div class="flip-inner"><div class="flip-front"></div><div class="flip-back"></div></div></div>
+        <div class="flip-cell"><div class="flip-inner"><div class="flip-front"></div><div class="flip-back"></div></div></div>
       </div>
       <div class="landing-overlay">
         <h1 class="landing-title" data-i18n="landing.title">동양의 미로 너를 확인해봐</h1>
@@ -235,6 +235,21 @@
       <div class="result-actions">
         <button class="btn btn-primary" id="shareBtn" data-i18n="try.share">결과 공유하기 &#x1F4E4;</button>
         <button class="btn btn-secondary" id="retryBtn" data-i18n="try.retry">다시 해보기</button>
+      </div>
+
+      <!-- Naejeonchilgi Transform -->
+      <div class="naejeon-section">
+        <div class="naejeon-divider"><span>&#x2728;</span></div>
+        <p class="naejeon-intro" data-i18n="naejeon.intro">AI가 내 얼굴을 나전칠기 예술작품으로 변환해드립니다</p>
+        <button class="btn btn-naejeon" id="naejeonBtn" data-i18n="naejeon.btn">&#x1F3A8; 나전칠기로 변환하기</button>
+        <div id="naejeonLoading" class="naejeon-loading" style="display:none;">
+          <div class="naejeon-spinner"></div>
+          <p data-i18n="naejeon.loading">나전칠기로 변환 중... ✨</p>
+        </div>
+        <div id="naejeonResult" style="display:none;">
+          <img id="naejeonImg" class="naejeon-img" alt="나전칠기 변환 이미지" />
+          <button class="btn btn-secondary naejeon-download-btn" id="naejeonDownloadBtn" data-i18n="naejeon.download">&#x2B07;&#xFE0F; 이미지 다운로드</button>
+        </div>
       </div>
     </div>
   </section>
