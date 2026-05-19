@@ -27,8 +27,8 @@ const T = {
     en: 'What animal lives<br>in your face?'
   },
   'landing.sub': {
-    ko: 'AI가 얼굴형·눈·코·입을 분석해<br>나의 동물 기질을 찾아드립니다',
-    en: 'AI reads your features to reveal<br>your hidden animal spirit type'
+    ko: '얼굴형·눈·코·입을 정밀하게 읽어<br>나의 동물 기질을 찾아드립니다',
+    en: 'Your face shape, eyes, and lips<br>reveal your hidden animal spirit type'
   },
   'landing.cta': { ko: '내 동물상 알아보기 →', en: 'Find My Animal Type →' },
 
@@ -57,8 +57,8 @@ const T = {
   },
   'about.step2.title': { ko: '2단계: 분석', en: 'Step 2: Analyze' },
   'about.step2.desc': {
-    ko: 'AI가 눈, 코, 입, 얼굴 윤곽 등 주요 이목구비를 분석하여 동물상을 매칭합니다.',
-    en: 'AI analyzes key facial features — eyes, nose, lips, and face shape — to match your animal spirit.'
+    ko: '눈, 코, 입, 얼굴 윤곽 등 주요 이목구비를 분석하여 동물상을 매칭합니다.',
+    en: 'Your eyes, nose, lips, and face shape are analyzed to match your animal spirit.'
   },
   'about.step3.title': { ko: '3단계: 결과', en: 'Step 3: Result' },
   'about.step3.desc': {
@@ -77,13 +77,13 @@ const T = {
   'try.analyzing': { ko: '관상을 읽고 있습니다...', en: 'Reading your face...' },
   'try.share': { ko: '결과 공유하기 &#x1F4E4;', en: 'Share Result &#x1F4E4;' },
   'try.retry': { ko: '다시 해보기', en: 'Try Again' },
-  'naejeon.intro': { ko: 'AI가 내 얼굴을 나전칠기 예술작품으로 변환해드립니다', en: 'AI transforms your face into a Naejeonchilgi masterpiece' },
+  'naejeon.intro': { ko: '내 얼굴을 나전칠기 예술작품으로 변환해드립니다', en: 'Transform your face into a Naejeonchilgi masterpiece' },
   'naejeon.btn': { ko: '&#x1F3A8; 나전칠기로 변환하기', en: '&#x1F3A8; Transform to Naejeonchilgi' },
   'naejeon.loading': { ko: '나전칠기로 변환 중... ✨', en: 'Transforming to Naejeonchilgi... ✨' },
   'naejeon.download': { ko: '&#x2B07;&#xFE0F; 이미지 다운로드', en: '&#x2B07;&#xFE0F; Download Image' },
 
   // Hero redesign keys
-  'hero.badge': { ko: '&#x2736; AI 얼굴 관상 분석', en: '&#x2736; AI Face Analysis' },
+  'hero.badge': { ko: '&#x2736; 동양 관상학 기반 분석', en: '&#x2736; Eastern Physiognomy' },
   'hero.trust': { ko: '&#x2713; 무료&nbsp;&nbsp;&nbsp;&#x2713; 3초 분석&nbsp;&nbsp;&nbsp;&#x2713; 사진 저장 안 함', en: '&#x2713; Free&nbsp;&nbsp;&nbsp;&#x2713; 3 seconds&nbsp;&nbsp;&nbsp;&#x2713; No photo storage' },
 
   // How It Works
@@ -91,7 +91,7 @@ const T = {
   'how.title': { ko: '3초면 끝나요', en: 'Done in 3 seconds' },
   'how.step1.title': { ko: '사진 선택', en: 'Choose Photo' },
   'how.step1.desc': { ko: '정면 얼굴 사진 한 장이면 충분합니다', en: 'One front-facing photo is all you need' },
-  'how.step2.title': { ko: 'AI 분석', en: 'AI Analysis' },
+  'how.step2.title': { ko: '관상 분석', en: 'Face Reading' },
   'how.step2.desc': { ko: '이목구비를 정밀 분석합니다', en: 'Precise facial feature analysis' },
   'how.step3.title': { ko: '결과 확인', en: 'See Results' },
   'how.step3.desc': { ko: '동물상 + 성격 분석 받기', en: 'Get your animal type + personality' },
