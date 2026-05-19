@@ -197,6 +197,48 @@ document.addEventListener('DOMContentLoaded', () => {
     landingUploadBtn.addEventListener('click', () => fileInput.click());
   }
 
+  // Sticky CTA
+  const stickyCTA = document.getElementById('stickyCTA');
+  const stickyUploadBtn = document.getElementById('stickyUploadBtn');
+  if (stickyUploadBtn) stickyUploadBtn.addEventListener('click', () => fileInput.click());
+
+  // Types preview CTA
+  const typesPreviewCta = document.getElementById('typesPreviewCta');
+  if (typesPreviewCta) typesPreviewCta.addEventListener('click', () => fileInput.click());
+
+  // Final CTA
+  const finalCtaBtn = document.getElementById('finalCtaBtn');
+  if (finalCtaBtn) finalCtaBtn.addEventListener('click', () => fileInput.click());
+
+  // Sticky CTA visibility based on hero scroll
+  const landingSection = document.getElementById('home');
+  if (stickyCTA && landingSection) {
+    const onScroll = () => {
+      const heroBottom = landingSection.getBoundingClientRect().bottom;
+      stickyCTA.classList.toggle('visible', heroBottom < 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  // Types scroll — drag to scroll on desktop
+  const typesScroll = document.querySelector('.types-scroll');
+  if (typesScroll) {
+    let isDown = false, startX, scrollLeft;
+    typesScroll.addEventListener('mousedown', e => {
+      isDown = true;
+      startX = e.pageX - typesScroll.offsetLeft;
+      scrollLeft = typesScroll.scrollLeft;
+    });
+    typesScroll.addEventListener('mouseleave', () => { isDown = false; });
+    typesScroll.addEventListener('mouseup', () => { isDown = false; });
+    typesScroll.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - typesScroll.offsetLeft;
+      typesScroll.scrollLeft = scrollLeft - (x - startX) * 1.5;
+    });
+  }
+
   // Upload click
   uploadArea.addEventListener('click', () => fileInput.click());
 

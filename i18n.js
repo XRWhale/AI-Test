@@ -23,14 +23,14 @@ const T = {
 
   // Landing (new hero)
   'landing.title': {
-    ko: '동양의 미로 너를 확인해봐',
-    en: 'See yourself through 1000 years of Eastern beauty'
+    ko: '내 얼굴 속<br>어떤 동물이 산다',
+    en: 'What animal lives<br>in your face?'
   },
   'landing.sub': {
-    ko: 'K-beauty가 사랑받는 이유, 네 얼굴로 확인해',
-    en: 'Why K-beauty rules the world — see it in your face.'
+    ko: 'AI가 얼굴형·눈·코·입을 분석해<br>나의 동물 기질을 찾아드립니다',
+    en: 'AI reads your features to reveal<br>your hidden animal spirit type'
   },
-  'landing.cta': { ko: '사진 업로드', en: 'Upload Your Photo' },
+  'landing.cta': { ko: '내 동물상 알아보기 →', en: 'Find My Animal Type →' },
 
   // Hero (try section)
   'hero.title': { ko: '내 관상 동물상', en: 'My Face Reading' },
@@ -81,6 +81,37 @@ const T = {
   'naejeon.btn': { ko: '&#x1F3A8; 나전칠기로 변환하기', en: '&#x1F3A8; Transform to Naejeonchilgi' },
   'naejeon.loading': { ko: '나전칠기로 변환 중... ✨', en: 'Transforming to Naejeonchilgi... ✨' },
   'naejeon.download': { ko: '&#x2B07;&#xFE0F; 이미지 다운로드', en: '&#x2B07;&#xFE0F; Download Image' },
+
+  // Hero redesign keys
+  'hero.badge': { ko: '&#x2736; AI 얼굴 관상 분석', en: '&#x2736; AI Face Analysis' },
+  'hero.trust': { ko: '&#x2713; 무료&nbsp;&nbsp;&nbsp;&#x2713; 3초 분석&nbsp;&nbsp;&nbsp;&#x2713; 사진 저장 안 함', en: '&#x2713; Free&nbsp;&nbsp;&nbsp;&#x2713; 3 seconds&nbsp;&nbsp;&nbsp;&#x2713; No photo storage' },
+
+  // How It Works
+  'how.eyebrow': { ko: 'HOW IT WORKS', en: 'HOW IT WORKS' },
+  'how.title': { ko: '3초면 끝나요', en: 'Done in 3 seconds' },
+  'how.step1.title': { ko: '사진 선택', en: 'Choose Photo' },
+  'how.step1.desc': { ko: '정면 얼굴 사진 한 장이면 충분합니다', en: 'One front-facing photo is all you need' },
+  'how.step2.title': { ko: 'AI 분석', en: 'AI Analysis' },
+  'how.step2.desc': { ko: '이목구비를 정밀 분석합니다', en: 'Precise facial feature analysis' },
+  'how.step3.title': { ko: '결과 확인', en: 'See Results' },
+  'how.step3.desc': { ko: '동물상 + 성격 분석 받기', en: 'Get your animal type + personality' },
+
+  // Types Preview
+  'preview.eyebrow': { ko: '9가지 동물상', en: '9 ANIMAL TYPES' },
+  'preview.title': { ko: '나는 어떤 동물일까?', en: 'Which animal are you?' },
+  'preview.sub': { ko: '9가지 유형 중 하나가 당신의 얼굴에 숨어있어요', en: 'One of 9 types is hidden in your face' },
+  'preview.cta': { ko: '내 동물상 알아보기 →', en: 'Find My Animal Type →' },
+
+  // Social Proof
+  'proof.label': { ko: '명이 이미 분석했어요', en: 'people analyzed so far' },
+  'proof.review1': { ko: '"여우상이라는 거 소름ㅋㅋ 친구한테 바로 공유함"', en: '"It said Fox Spirit and it\'s SO accurate 😭 shared instantly"' },
+  'proof.review2': { ko: '"결과가 진짜 나랑 똑같음.. 재미로 했는데 무서움 &#x1F602;"', en: '"Did this for fun and it described me perfectly lol 😂"' },
+  'proof.review3': { ko: '"호랑이상 나왔는데 친구들 다 공감ㅋㅋ 대박"', en: '"Got Tiger Spirit and all my friends were like \'omg yes\' 😂"' },
+
+  // Final CTA
+  'finalcta.title': { ko: '아직도 모르고 있어?', en: 'Still don\'t know?' },
+  'finalcta.sub': { ko: '내 얼굴 속 동물상', en: 'Your animal spirit type' },
+  'finalcta.cta': { ko: '지금 바로 알아보기 →', en: 'Discover Now →' },
 
   // Types Section
   'types.title': { ko: '9가지 관상 동물상', en: '9 Animal Spirit Types' },
