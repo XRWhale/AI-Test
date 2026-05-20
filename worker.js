@@ -102,7 +102,7 @@ traditional Korean lacquerware art style,
 highly detailed, studio lighting`;
 
   const geminiResp = await fetch(
-    `${GEMINI_API}/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${env.GEMINI_API_KEY}`,
+    `${GEMINI_API}/models/gemini-2.5-flash-image:generateContent?key=${env.GEMINI_API_KEY}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
