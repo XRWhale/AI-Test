@@ -179,9 +179,40 @@ const ANALYSIS_STEPS = {
 // ── State ──
 let uploadedImageData = null;
 
+// ── Worker URL (Cloudflare Worker 배포 후 교체) ──
+const WORKER_URL = 'https://naejeon-worker.zmfltmxkf79.workers.dev';
+
 // ── DOM Ready ──
 document.addEventListener('DOMContentLoaded', () => {
   initFlipGrid();
+
+  // 결제 완료 후 돌아왔을 때 checkout_id 감지
+  const params = new URLSearchParams(window.location.search);
+  const checkoutId = params.get('checkout_id');
+  if (checkoutId) {
+    history.replaceState({}, '', window.location.pathname); // URL 정리
+    const lang = getLang();
+    fetch(`${WORKER_URL}/verify-payment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ checkoutId }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.token) {
+          sessionStorage.setItem('naejeonToken', data.token);
+          alert(lang === 'ko'
+            ? '✅ 결제 완료! 사진을 업로드하고 변환 버튼을 누르세요.'
+            : '✅ Payment complete! Upload a photo and click transform.');
+        } else {
+          alert(lang === 'ko' ? '결제 확인 실패: ' + data.error : 'Payment failed: ' + data.error);
+        }
+      })
+      .catch(() => {
+        const lang = getLang();
+        alert(lang === 'ko' ? '결제 확인 중 오류가 발생했습니다.' : 'Error verifying payment.');
+      });
+  }
 
   const uploadArea = document.getElementById('uploadArea');
   const fileInput = document.getElementById('fileInput');
@@ -468,73 +499,53 @@ async function transformToNaejeonchilgi() {
   const resultImg = document.getElementById('naejeonImg');
   const lang = getLang();
 
-  // Get or prompt for API key
-  let apiKey = localStorage.getItem('geminiApiKey');
-  if (!apiKey) {
-    apiKey = prompt(
-      lang === 'ko'
-        ? 'Google Gemini API 키를 입력하세요.\n(aistudio.google.com에서 무료 발급)'
-        : 'Enter your Google Gemini API key.\n(Get free at aistudio.google.com)'
-    );
-    if (!apiKey) return;
-    localStorage.setItem('geminiApiKey', apiKey.trim());
-    apiKey = apiKey.trim();
+  const token = sessionStorage.getItem('naejeonToken');
+
+  // 토큰 없으면 결제 페이지로
+  if (!token) {
+    btn.disabled = true;
+    btn.textContent = lang === 'ko' ? '결제 페이지로 이동 중...' : 'Redirecting to payment...';
+    try {
+      const res = await fetch(`${WORKER_URL}/create-checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ siteUrl: window.location.origin + window.location.pathname }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      window.location.href = data.url;
+    } catch (err) {
+      alert(lang === 'ko' ? '결제 오류: ' + err.message : 'Payment error: ' + err.message);
+      btn.disabled = false;
+      btn.textContent = lang === 'ko' ? '🎨 나전칠기로 변환하기' : '🎨 Transform to Naejeonchilgi';
+    }
+    return;
   }
 
-  // Parse base64 from data URL
+  // 토큰 있으면 변환 실행
   const comma = uploadedImageData.indexOf(',');
   const mimeMatch = uploadedImageData.substring(0, comma).match(/data:([^;]+)/);
   const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-  const base64Data = uploadedImageData.substring(comma + 1);
+  const imageData = uploadedImageData.substring(comma + 1);
 
   btn.disabled = true;
   btn.textContent = lang === 'ko' ? '변환 중... ✨' : 'Transforming... ✨';
   loadingDiv.style.display = '';
   resultDiv.style.display = 'none';
 
-  const transformPrompt = `이미지를 한국의 나전칠기 작품과 동일하게 변형시켜줘
-
-A portrait made entirely of mother-of-pearl inlay on black lacquer (najeonchilgi),
-human face constructed from iridescent nacre shell fragments,
-mosaic-like composition with color-shifting abalone pieces,
-deep black lacquered background,
-shimmering rainbow highlights on shell surfaces,
-traditional Korean lacquerware art style,
-highly detailed, studio lighting`;
-
   try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [
-              { text: transformPrompt },
-              { inline_data: { mime_type: mimeType, data: base64Data } }
-            ]
-          }],
-          generationConfig: { response_modalities: ['IMAGE', 'TEXT'] }
-        })
-      }
-    );
-
-    if (!res.ok) {
-      const errBody = await res.json().catch(() => ({}));
-      throw new Error(errBody.error?.message || `HTTP ${res.status}`);
-    }
+    const res = await fetch(`${WORKER_URL}/transform`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, imageData, mimeType }),
+    });
 
     const data = await res.json();
-    let imageDataUrl = null;
-    for (const part of (data.candidates?.[0]?.content?.parts || [])) {
-      if (part.inline_data?.data) {
-        imageDataUrl = `data:${part.inline_data.mime_type};base64,${part.inline_data.data}`;
-        break;
-      }
-    }
-    if (!imageDataUrl) throw new Error(lang === 'ko' ? '이미지 생성 실패' : 'No image returned');
+    if (data.error) throw new Error(data.error);
 
+    sessionStorage.removeItem('naejeonToken');
+
+    const imageDataUrl = `data:${data.mimeType};base64,${data.imageData}`;
     resultImg.src = imageDataUrl;
     resultDiv.style.display = '';
 
@@ -546,13 +557,8 @@ highly detailed, studio lighting`;
     };
 
   } catch (err) {
-    const isAuthError = /API_KEY|401|403|invalid/.test(err.message);
-    if (isAuthError) localStorage.removeItem('geminiApiKey');
-    alert(
-      lang === 'ko'
-        ? `변환 실패: ${err.message}${isAuthError ? '\nAPI 키를 다시 확인해주세요.' : ''}`
-        : `Transform failed: ${err.message}${isAuthError ? '\nPlease check your API key.' : ''}`
-    );
+    if (/유효하지 않거나|Invalid or used/.test(err.message)) sessionStorage.removeItem('naejeonToken');
+    alert(lang === 'ko' ? `변환 실패: ${err.message}` : `Transform failed: ${err.message}`);
   } finally {
     btn.disabled = false;
     btn.textContent = lang === 'ko' ? '🎨 나전칠기로 변환하기' : '🎨 Transform to Naejeonchilgi';
