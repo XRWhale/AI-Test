@@ -115,6 +115,7 @@ highly detailed, studio lighting`;
 
   if (!geminiResp.ok) {
     const err = await geminiResp.text();
+    console.error('Gemini API error', geminiResp.status, err);
     return json({ error: 'Gemini 오류: ' + err }, 500);
   }
 
