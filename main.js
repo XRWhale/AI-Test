@@ -201,9 +201,21 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(data => {
         if (data.token) {
           sessionStorage.setItem('naejeonToken', data.token);
-          alert(lang === 'ko'
-            ? '✅ 결제 완료! 사진을 업로드하고 변환 버튼을 누르세요.'
-            : '✅ Payment complete! Upload a photo and click transform.');
+          // 저장해둔 이미지 복원 후 자동 변환
+          const saved = sessionStorage.getItem('pendingImage');
+          if (saved) {
+            sessionStorage.removeItem('pendingImage');
+            uploadedImageData = saved;
+            const previewImg = document.getElementById('previewImg');
+            const previewArea = document.getElementById('previewArea');
+            const uploadArea = document.getElementById('uploadArea');
+            if (previewImg) previewImg.src = saved;
+            if (previewArea) previewArea.style.display = 'flex';
+            if (uploadArea) uploadArea.style.display = 'none';
+            // 결과 화면으로 스크롤 후 변환 자동 실행
+            document.getElementById('naejeonBtn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => transformToNaejeonchilgi(), 500);
+          }
         } else {
           alert(lang === 'ko' ? '결제 확인 실패: ' + data.error : 'Payment failed: ' + data.error);
         }
@@ -503,6 +515,8 @@ async function transformToNaejeonchilgi() {
 
   // 토큰 없으면 결제 페이지로
   if (!token) {
+    // 결제 후 복원을 위해 이미지 임시 저장
+    try { sessionStorage.setItem('pendingImage', uploadedImageData); } catch {}
     btn.disabled = true;
     btn.textContent = lang === 'ko' ? '결제 페이지로 이동 중...' : 'Redirecting to payment...';
     try {
