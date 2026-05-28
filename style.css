@@ -1415,32 +1415,32 @@ html[lang="ko"] .lang-en { display: none; }
   background-position: center 15%;
 }
 
-.flip-cell:nth-child(1) .flip-front { background-image: url('images/1-1.png'); }
-.flip-cell:nth-child(1) .flip-back  { background-image: url('images/1-2.png'); }
+.flip-cell:nth-child(1) .flip-front { background-image: url('images/1-1.webp'); }
+.flip-cell:nth-child(1) .flip-back  { background-image: url('images/1-2.webp'); }
 
-.flip-cell:nth-child(2) .flip-front { background-image: url('images/2-1.jpg'); }
-.flip-cell:nth-child(2) .flip-back  { background-image: url('images/2-2.png'); }
+.flip-cell:nth-child(2) .flip-front { background-image: url('images/2-1.webp'); }
+.flip-cell:nth-child(2) .flip-back  { background-image: url('images/2-2.webp'); }
 
-.flip-cell:nth-child(3) .flip-front { background-image: url('images/3-1.png'); }
-.flip-cell:nth-child(3) .flip-back  { background-image: url('images/3-2.jpg'); }
+.flip-cell:nth-child(3) .flip-front { background-image: url('images/3-1.webp'); }
+.flip-cell:nth-child(3) .flip-back  { background-image: url('images/3-2.webp'); }
 
-.flip-cell:nth-child(4) .flip-front { background-image: url('images/4-1.png'); }
-.flip-cell:nth-child(4) .flip-back  { background-image: url('images/4-2.jpg'); }
+.flip-cell:nth-child(4) .flip-front { background-image: url('images/4-1.webp'); }
+.flip-cell:nth-child(4) .flip-back  { background-image: url('images/4-2.webp'); }
 
-.flip-cell:nth-child(5) .flip-front { background-image: url('images/5-1.png'); }
-.flip-cell:nth-child(5) .flip-back  { background-image: url('images/5-2.jpg'); }
+.flip-cell:nth-child(5) .flip-front { background-image: url('images/5-1.webp'); }
+.flip-cell:nth-child(5) .flip-back  { background-image: url('images/5-2.webp'); }
 
-.flip-cell:nth-child(6) .flip-front { background-image: url('images/6-1.png'); }
-.flip-cell:nth-child(6) .flip-back  { background-image: url('images/6-2.jpg'); }
+.flip-cell:nth-child(6) .flip-front { background-image: url('images/6-1.webp'); }
+.flip-cell:nth-child(6) .flip-back  { background-image: url('images/6-2.webp'); }
 
-.flip-cell:nth-child(7) .flip-front { background-image: url('images/7-1.png'); }
-.flip-cell:nth-child(7) .flip-back  { background-image: url('images/7-2.jpg'); }
+.flip-cell:nth-child(7) .flip-front { background-image: url('images/7-1.webp'); }
+.flip-cell:nth-child(7) .flip-back  { background-image: url('images/7-2.webp'); }
 
-.flip-cell:nth-child(8) .flip-front { background-image: url('images/8-1.png'); }
-.flip-cell:nth-child(8) .flip-back  { background-image: url('images/8-2.jpg'); }
+.flip-cell:nth-child(8) .flip-front { background-image: url('images/8-1.webp'); }
+.flip-cell:nth-child(8) .flip-back  { background-image: url('images/8-2.webp'); }
 
-.flip-cell:nth-child(9) .flip-front { background-image: url('images/9-1.png'); }
-.flip-cell:nth-child(9) .flip-back  { background-image: url('images/9-2.jpg'); }
+.flip-cell:nth-child(9) .flip-front { background-image: url('images/9-1.webp'); }
+.flip-cell:nth-child(9) .flip-back  { background-image: url('images/9-2.webp'); }
 
 /* ══════════════════════════════════════════
    Naejeonchilgi Transform Section
