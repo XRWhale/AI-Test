@@ -582,6 +582,13 @@ async function transformToNaejeonchilgi() {
 
     const imageDataUrl = `data:${data.mimeType};base64,${data.imageData}`;
     resultImg.src = imageDataUrl;
+    // 원본(before) + 변환결과(after) 나란히 표시
+    const beforeImg = document.getElementById('naejeonBeforeImg');
+    if (beforeImg) beforeImg.src = uploadedImageData;
+    const beforeCap = document.getElementById('naejeonBeforeCap');
+    const afterCap = document.getElementById('naejeonAfterCap');
+    if (beforeCap) beforeCap.textContent = lang === 'ko' ? '원본' : 'Before';
+    if (afterCap) afterCap.textContent = lang === 'ko' ? '나전칠기' : 'After';
     resultDiv.style.display = '';
 
     document.getElementById('naejeonDownloadBtn').onclick = () => {

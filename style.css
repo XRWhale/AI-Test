@@ -1538,6 +1538,37 @@ html[lang="ko"] .lang-en { display: none; }
   margin-top: 4px;
 }
 
+/* Before / After 비교 레이아웃 */
+.naejeon-compare {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin: 20px auto 14px;
+}
+
+.naejeon-ba {
+  margin: 0;
+  flex: 1 1 240px;
+  max-width: 320px;
+  min-width: 150px;
+  text-align: center;
+}
+
+.naejeon-compare .naejeon-img {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto 8px;
+}
+
+.naejeon-ba figcaption {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(200, 160, 82, 0.95);
+  letter-spacing: 0.03em;
+}
+
 /* ══════════════════════════════════════════
    LANDING HERO REDESIGN
 ══════════════════════════════════════════ */

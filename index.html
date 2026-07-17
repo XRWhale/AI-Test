@@ -311,7 +311,16 @@
           <p data-i18n="naejeon.loading">나전칠기로 변환 중... ✨</p>
         </div>
         <div id="naejeonResult" style="display:none;">
-          <img id="naejeonImg" class="naejeon-img" alt="나전칠기 변환 이미지" />
+          <div class="naejeon-compare">
+            <figure class="naejeon-ba">
+              <img id="naejeonBeforeImg" class="naejeon-img" alt="원본 사진" />
+              <figcaption id="naejeonBeforeCap"></figcaption>
+            </figure>
+            <figure class="naejeon-ba">
+              <img id="naejeonImg" class="naejeon-img" alt="나전칠기 변환 이미지" />
+              <figcaption id="naejeonAfterCap"></figcaption>
+            </figure>
+          </div>
           <button class="btn btn-secondary naejeon-download-btn" id="naejeonDownloadBtn" data-i18n="naejeon.download">&#x2B07;&#xFE0F; 이미지 다운로드</button>
         </div>
       </div>
