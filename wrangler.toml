@@ -1,0 +1,10 @@
+name = "naejeon-worker"
+main = "worker.js"
+compatibility_date = "2024-09-23"
+
+# 대시보드에서 설정한 기존 변수(GEMINI_API_KEY, POLAR_API_KEY 등)를 배포 시 삭제하지 않음
+keep_vars = true
+
+[[kv_namespaces]]
+binding = "NAEJEON_TOKENS"
+id = "33a4df2e14d846dca141aa8f1c61069f"

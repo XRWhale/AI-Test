@@ -1,9 +1,11 @@
 // Cloudflare Worker — Naejeonchilgi Payment + Transform
-// Env vars required: POLAR_API_KEY, GEMINI_API_KEY
+// Env vars required: POLAR_API_KEY, GEMINI_API_KEY, PROXY_SECRET
 // KV binding required: NAEJEON_TOKENS
 
 const POLAR_API = 'https://api.polar.sh/v1';
-const GEMINI_API = 'https://generativelanguage.googleapis.com/v1beta';
+// 미국 리전 Vercel 프록시 경유 (Gemini 지역 차단 우회 — Cloudflare 직접/AI Gateway는 차단됨)
+const GEMINI_PROXY = 'https://gemini-proxy-delta-nine.vercel.app/api/transform';
+const GEMINI_MODEL = 'gemini-2.5-flash-image';
 const PRODUCT_ID = '87bb06af-1d7b-4100-858c-ca626ab86718';
 
 const CORS = {
@@ -101,17 +103,21 @@ shimmering rainbow highlights on shell surfaces,
 traditional Korean lacquerware art style,
 highly detailed, studio lighting`;
 
-  const geminiResp = await fetch(
-    `${GEMINI_API}/models/gemini-2.5-flash-image:generateContent?key=${env.GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+  const geminiResp = await fetch(GEMINI_PROXY, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-proxy-secret': env.PROXY_SECRET,
+    },
+    body: JSON.stringify({
+      apiKey: env.GEMINI_API_KEY,
+      model: GEMINI_MODEL,
+      body: {
         contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: mimeType, data: imageData } }] }],
         generationConfig: { response_modalities: ['IMAGE', 'TEXT'] },
-      }),
-    }
-  );
+      },
+    }),
+  });
 
   if (!geminiResp.ok) {
     const err = await geminiResp.text();
@@ -121,9 +127,11 @@ highly detailed, studio lighting`;
 
   const result = await geminiResp.json();
   const parts = result.candidates?.[0]?.content?.parts || [];
-  const imgPart = parts.find(p => p.inline_data);
+  // Gemini REST 응답은 camelCase(inlineData) — snake_case(inline_data)도 대비
+  const imgPart = parts.find(p => p.inlineData || p.inline_data);
 
   if (!imgPart) return json({ error: '이미지 생성 실패' }, 500);
 
-  return json({ imageData: imgPart.inline_data.data, mimeType: imgPart.inline_data.mime_type });
+  const inline = imgPart.inlineData || imgPart.inline_data;
+  return json({ imageData: inline.data, mimeType: inline.mimeType || inline.mime_type });
 }

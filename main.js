@@ -326,12 +326,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!file.type.startsWith('image/')) return;
     const reader = new FileReader();
     reader.onload = e => {
-      uploadedImageData = e.target.result;
-      previewImg.src = uploadedImageData;
-      uploadArea.style.display = 'none';
-      previewArea.style.display = 'flex';
-      analyzeBtn.disabled = false;
-      document.getElementById('try').scrollIntoView({ behavior: 'smooth' });
+      const original = e.target.result;
+      const showPreview = dataUrl => {
+        uploadedImageData = dataUrl;
+        previewImg.src = uploadedImageData;
+        uploadArea.style.display = 'none';
+        previewArea.style.display = 'flex';
+        analyzeBtn.disabled = false;
+        document.getElementById('try').scrollIntoView({ behavior: 'smooth' });
+      };
+      // 원본이 크면 sessionStorage 용량 초과·프록시 크기 제한에 걸리므로 1024px로 축소
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 1024;
+        let { width, height } = img;
+        if (width > MAX || height > MAX) {
+          const scale = MAX / Math.max(width, height);
+          width = Math.round(width * scale);
+          height = Math.round(height * scale);
+        }
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          showPreview(canvas.toDataURL('image/jpeg', 0.85));
+        } catch {
+          showPreview(original); // 축소 실패 시 원본 사용
+        }
+      };
+      img.onerror = () => showPreview(original);
+      img.src = original;
     };
     reader.readAsDataURL(file);
   }
