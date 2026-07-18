@@ -26,6 +26,8 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
 
     const { pathname } = new URL(request.url);
+    if (pathname === '/track-click') return trackClick(request, env);
+    if (pathname === '/stats') return stats(request, env);
     if (pathname === '/create-checkout') return createCheckout(request, env);
     if (pathname === '/verify-payment') return verifyPayment(request, env);
     if (pathname === '/transform') return transform(request, env);
@@ -33,6 +35,50 @@ export default {
     return new Response('Not found', { status: 404 });
   },
 };
+
+// ── 수요 검증: "변환하기" 클릭 집계 (가짜문 테스트) ──
+async function trackClick(request, env) {
+  if (request.method !== 'POST') return json({ error: 'method' }, 405);
+  let lang = 'na';
+  try { const b = await request.json(); if (b && b.lang) lang = String(b.lang).slice(0, 8); } catch {}
+  const key = `click:${new Date().toISOString()}-${Math.random().toString(36).slice(2, 8)}`;
+  await env.NAEJEON_TOKENS.put(key, lang, { expirationTtl: 60 * 60 * 24 * 180 }); // 180일 보관
+  return json({ ok: true });
+}
+
+// ── 클릭 통계 조회 (소유자용, ?key=STATS_KEY) ──
+async function stats(request, env) {
+  const { searchParams } = new URL(request.url);
+  if (searchParams.get('key') !== env.STATS_KEY) {
+    return new Response('unauthorized', { status: 401, headers: CORS });
+  }
+  let cursor, total = 0;
+  const times = [];
+  do {
+    const list = await env.NAEJEON_TOKENS.list({ prefix: 'click:', cursor });
+    total += list.keys.length;
+    for (const k of list.keys) times.push(k.name.slice('click:'.length));
+    cursor = list.list_complete ? null : list.cursor;
+  } while (cursor);
+
+  times.sort().reverse();
+  const rows = times.slice(0, 100).map(t => `<li>${t}</li>`).join('');
+  const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>변환 클릭 통계</title>
+<style>body{font-family:system-ui,sans-serif;background:#0f1117;color:#e2e8f0;padding:40px 20px;max-width:640px;margin:0 auto;}
+.big{font-size:4rem;font-weight:800;color:#f5c451;margin:0;}
+.label{color:#94a3b8;margin:0 0 30px;}
+h3{color:#7dd3fc;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;}
+ul{list-style:none;padding:0;}li{color:#94a3b8;font-size:.82rem;padding:4px 0;border-bottom:1px solid #1e293b;font-family:monospace;}</style>
+</head><body>
+<p class="big">${total}</p>
+<p class="label">총 "나전칠기로 변환하기 ($1)" 클릭 수</p>
+<h3>최근 클릭 (최대 100, UTC)</h3>
+<ul>${rows || '<li>아직 클릭 없음</li>'}</ul>
+</body></html>`;
+  return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', ...CORS } });
+}
 
 async function createCheckout(request, env) {
   const { siteUrl } = await request.json();

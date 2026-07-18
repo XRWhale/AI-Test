@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   shareBtn.addEventListener('click', shareResult);
-  document.getElementById('naejeonBtn').addEventListener('click', transformToNaejeonchilgi);
+  document.getElementById('naejeonBtn').addEventListener('click', naejeonFakeDoor);
 
   function handleFile(file) {
     if (!file.type.startsWith('image/')) return;
@@ -522,7 +522,35 @@ function showResult() {
   window._lastResult = type;
 }
 
-// ── Naejeonchilgi Transform ──
+// ── 수요 검증: 변환 버튼 = 가짜문 (클릭 집계 + 곧 오픈 안내) ──
+async function naejeonFakeDoor() {
+  const lang = getLang();
+  const btn = document.getElementById('naejeonBtn');
+
+  // 클릭 집계 (실패해도 UX엔 영향 없음)
+  fetch(`${WORKER_URL}/track-click`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ lang }),
+  }).catch(() => {});
+
+  // "곧 오픈" 안내 표시
+  let notice = document.getElementById('naejeonNotice');
+  if (!notice) {
+    notice = document.createElement('div');
+    notice.id = 'naejeonNotice';
+    notice.className = 'naejeon-notice';
+    btn.insertAdjacentElement('afterend', notice);
+  }
+  notice.textContent = lang === 'ko'
+    ? '🙏 준비 중이에요! 곧 오픈 예정입니다. 관심 가져주셔서 감사합니다.'
+    : '🙏 Coming soon! Thanks so much for your interest.';
+  notice.style.display = 'block';
+  btn.disabled = true;
+  setTimeout(() => { btn.disabled = false; }, 2000);
+}
+
+// ── Naejeonchilgi Transform (현재 미사용 — 수요 검증 후 재활성화) ──
 async function transformToNaejeonchilgi() {
   if (!uploadedImageData) return;
 

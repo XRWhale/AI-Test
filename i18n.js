@@ -78,7 +78,7 @@ const T = {
   'try.share': { ko: '결과 공유하기 &#x1F4E4;', en: 'Share Result &#x1F4E4;' },
   'try.retry': { ko: '다시 해보기', en: 'Try Again' },
   'naejeon.intro': { ko: '내 얼굴을 나전칠기 예술작품으로 변환해드립니다', en: 'Transform your face into a Naejeonchilgi masterpiece' },
-  'naejeon.btn': { ko: '&#x1F3A8; 나전칠기로 변환하기', en: '&#x1F3A8; Transform to Naejeonchilgi' },
+  'naejeon.btn': { ko: '&#x1F3A8; 나전칠기로 변환하기 ($1)', en: '&#x1F3A8; Transform to Naejeonchilgi ($1)' },
   'naejeon.loading': { ko: '나전칠기로 변환 중... ✨', en: 'Transforming to Naejeonchilgi... ✨' },
   'naejeon.download': { ko: '&#x2B07;&#xFE0F; 이미지 다운로드', en: '&#x2B07;&#xFE0F; Download Image' },
 

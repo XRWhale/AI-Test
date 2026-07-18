@@ -1538,6 +1538,20 @@ html[lang="ko"] .lang-en { display: none; }
   margin-top: 4px;
 }
 
+.naejeon-notice {
+  display: none;
+  margin: 16px auto 0;
+  max-width: 420px;
+  padding: 14px 18px;
+  background: rgba(200, 160, 82, 0.12);
+  border: 1px solid rgba(200, 160, 82, 0.4);
+  border-radius: 10px;
+  color: #f5c451;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
 /* Before / After 비교 레이아웃 */
 .naejeon-compare {
   display: flex;
