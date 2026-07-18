@@ -1538,6 +1538,11 @@ html[lang="ko"] .lang-en { display: none; }
   margin-top: 4px;
 }
 
+.hero-naejeon-btn {
+  margin-top: 12px;
+  display: inline-block;
+}
+
 .naejeon-notice {
   display: none;
   margin: 16px auto 0;

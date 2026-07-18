@@ -39,10 +39,16 @@ export default {
 // ── 수요 검증: "변환하기" 클릭 집계 (가짜문 테스트) ──
 async function trackClick(request, env) {
   if (request.method !== 'POST') return json({ error: 'method' }, 405);
-  let lang = 'na';
-  try { const b = await request.json(); if (b && b.lang) lang = String(b.lang).slice(0, 8); } catch {}
+  let lang = 'na', source = 'na';
+  try {
+    const b = await request.json();
+    if (b) {
+      if (b.lang) lang = String(b.lang).slice(0, 8);
+      if (b.source) source = String(b.source).slice(0, 24);
+    }
+  } catch {}
   const key = `click:${new Date().toISOString()}-${Math.random().toString(36).slice(2, 8)}`;
-  await env.NAEJEON_TOKENS.put(key, lang, { expirationTtl: 60 * 60 * 24 * 180 }); // 180일 보관
+  await env.NAEJEON_TOKENS.put(key, '', { expirationTtl: 60 * 60 * 24 * 180, metadata: { source, lang } }); // 180일 보관
   return json({ ok: true });
 }
 
@@ -53,29 +59,39 @@ async function stats(request, env) {
     return new Response('unauthorized', { status: 401, headers: CORS });
   }
   let cursor, total = 0;
-  const times = [];
+  const bySource = {};
+  const rows = [];
   do {
     const list = await env.NAEJEON_TOKENS.list({ prefix: 'click:', cursor });
     total += list.keys.length;
-    for (const k of list.keys) times.push(k.name.slice('click:'.length));
+    for (const k of list.keys) {
+      const src = (k.metadata && k.metadata.source) || 'na';
+      bySource[src] = (bySource[src] || 0) + 1;
+      rows.push({ t: k.name.slice('click:'.length), src });
+    }
     cursor = list.list_complete ? null : list.cursor;
   } while (cursor);
 
-  times.sort().reverse();
-  const rows = times.slice(0, 100).map(t => `<li>${t}</li>`).join('');
+  rows.sort((a, b) => (a.t < b.t ? 1 : -1));
+  const recent = rows.slice(0, 100).map(r => `<li>${r.t} <span class="src">${r.src}</span></li>`).join('');
+  const srcRows = Object.entries(bySource).sort((a, b) => b[1] - a[1])
+    .map(([s, c]) => `<li><span class="src">${s}</span> : <b>${c}</b></li>`).join('');
   const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>변환 클릭 통계</title>
 <style>body{font-family:system-ui,sans-serif;background:#0f1117;color:#e2e8f0;padding:40px 20px;max-width:640px;margin:0 auto;}
 .big{font-size:4rem;font-weight:800;color:#f5c451;margin:0;}
 .label{color:#94a3b8;margin:0 0 30px;}
-h3{color:#7dd3fc;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;}
-ul{list-style:none;padding:0;}li{color:#94a3b8;font-size:.82rem;padding:4px 0;border-bottom:1px solid #1e293b;font-family:monospace;}</style>
+h3{color:#7dd3fc;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;margin-top:30px;}
+ul{list-style:none;padding:0;}li{color:#94a3b8;font-size:.82rem;padding:4px 0;border-bottom:1px solid #1e293b;font-family:monospace;}
+.src{color:#f5c451;}</style>
 </head><body>
 <p class="big">${total}</p>
 <p class="label">총 "나전칠기로 변환하기 ($1)" 클릭 수</p>
+<h3>버튼별 클릭 (source)</h3>
+<ul>${srcRows || '<li>없음</li>'}</ul>
 <h3>최근 클릭 (최대 100, UTC)</h3>
-<ul>${rows || '<li>아직 클릭 없음</li>'}</ul>
+<ul>${recent || '<li>아직 클릭 없음</li>'}</ul>
 </body></html>`;
   return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', ...CORS } });
 }

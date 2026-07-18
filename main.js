@@ -317,6 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   shareBtn.addEventListener('click', shareResult);
   document.getElementById('naejeonBtn').addEventListener('click', naejeonFakeDoor);
+  document.getElementById('naejeonHeroBtn')?.addEventListener('click', naejeonFakeDoor);
 
   function handleFile(file) {
     if (!file.type.startsWith('image/')) return;
@@ -523,22 +524,22 @@ function showResult() {
 }
 
 // ── 수요 검증: 변환 버튼 = 가짜문 (클릭 집계 + 곧 오픈 안내) ──
-async function naejeonFakeDoor() {
+async function naejeonFakeDoor(e) {
   const lang = getLang();
-  const btn = document.getElementById('naejeonBtn');
+  const btn = (e && e.currentTarget) || document.getElementById('naejeonBtn');
+  const source = (btn && btn.id) || 'unknown';
 
   // 클릭 집계 (실패해도 UX엔 영향 없음)
   fetch(`${WORKER_URL}/track-click`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ lang }),
+    body: JSON.stringify({ lang, source }),
   }).catch(() => {});
 
-  // "곧 오픈" 안내 표시
-  let notice = document.getElementById('naejeonNotice');
-  if (!notice) {
+  // 클릭한 버튼 바로 아래에 "곧 오픈" 안내 표시
+  let notice = btn.nextElementSibling;
+  if (!notice || !notice.classList || !notice.classList.contains('naejeon-notice')) {
     notice = document.createElement('div');
-    notice.id = 'naejeonNotice';
     notice.className = 'naejeon-notice';
     btn.insertAdjacentElement('afterend', notice);
   }
